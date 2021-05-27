@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message FileTopic {
+    string file_path = 1;
+    // <label, probability>
+    map<string, float> topics = 2;
+}
+
+message FileContribution {
+    string file_path = 1;
+    // <email, percent>
+    map<string, float> contributions = 2;
+}
+
+message ManpowerAllocation {
+    string topic = 1;
+    // <email, percent * 10000>
+    map<string, float> allocations = 2;
+}
+
+message TopicModeling {
+    // <FILE_TOPIC_DISTRIBUTION>
+    repeated FileTopic file_topics = 161;
+    // <FILE_DEVELOPER_CONTRIBUTION>
+    repeated FileContribution file_contributions = 162;
+    // <MANPOWER_ALLOCATION>
+    repeated ManpowerAllocation manpower_allocations = 163;
+}

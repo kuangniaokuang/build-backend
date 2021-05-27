@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message Streaming {
+    // The relative path to the report protobuf file
+    string file_path = 1;
+    // size in byte
+    int64 file_size = 2;
+    // the md5 checksum of the first 4096 bytes
+    string file_md5 = 3;
+}

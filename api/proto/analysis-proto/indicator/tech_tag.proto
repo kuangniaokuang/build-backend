@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message TechTag {
+    message TokenToFile {
+        string token = 1;
+        string file_path = 2;
+        string line_code = 3;
+    }
+
+    message PackageToToken {
+        string package = 1;
+        repeated TokenToFile token_to_files = 2;
+    }
+
+    message CommitToPackage {
+        string hexsha = 1;
+        repeated PackageToToken package_to_tokens = 2;
+    }
+
+    repeated CommitToPackage commit_to_packages = 2;
+}

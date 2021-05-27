@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message ContributorBombSweep {
+    string email = 1;
+    int32 count = 2;
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message Dryness {
+    message DrynessFunc {
+        string func_id = 1;
+        string email = 2;
+    }
+
+    message DrynessGroup {
+        repeated DrynessFunc dryness_funcs = 1;
+    }
+
+    // score range [0, 1]
+    float score = 1;
+    repeated DrynessGroup dryness_groups = 2; // list of DocCoverageFunc
+}
+

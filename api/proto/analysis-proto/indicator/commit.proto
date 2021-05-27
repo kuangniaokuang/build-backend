@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message Commit {
+    message Signature {
+        string email = 1;
+        string name = 2;
+        int32 time = 3;
+        int32 offset = 4;
+    }
+
+    string hexsha = 1;
+    Signature author = 2;
+    Signature committer = 3;
+    string message = 4;
+    // parents hexsha
+    repeated string parents = 5;
+    int32 insertions = 6;
+    int32 deletions = 7;
+}

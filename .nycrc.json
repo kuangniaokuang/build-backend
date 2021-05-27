@@ -1,0 +1,14 @@
+{
+  "reporter": ["html", "text-summary"],
+  "report-dir": "test/coverage",
+  "exclude": [
+    "common-backend/**",
+    "test/**",
+    "db/**",
+    "scripts/**",
+    "cron/**",
+    "docs/**",
+    "node_modules/**",
+    "k8s/**"
+  ]
+}

@@ -1,0 +1,258 @@
+syntax = "proto3";
+
+package merico.analysis.gateway;
+
+option go_package = "gitlab.com/meri.co/vdev.co/backend/analytics/pb";
+
+
+message ResponseStatus {
+    StatusCode code = 1;
+    string message = 2;
+
+    enum StatusCode {
+        SUCCESS = 0;
+        UNAUTHORIZED = 401;
+        INTERNAL_SERVER_ERROR = 500;
+
+        UNKNOWN = 1400;
+        OBJECT_NOT_FOUND = 1401;
+        VALUE_NOT_FOUND = 1402;
+        VALUE_ALREADY_EXISTS = 1403;
+        VALUE_OUT_OF_RANGE = 1404;
+        INVALID_VALUE = 1405;
+        FAILED_DEPENDENCY = 1406;
+        FORBIDDEN = 1407;
+        USERNAME_TAKEN = 1408;
+        EMAIL_TAKEN = 1409;
+    }
+}
+
+// This request will trigger both pre-analysis and the formal analysis
+message SubmitRepoRequest {
+    enum AuthType {
+        UNKNOWN = 0;
+        SSH_KEY = 1;
+        HTTP_BASE = 2;
+    }
+    string project_id = 11;
+    string git_url = 1;
+    reserved 2;
+    reserved 'version';
+    int64 batch_time = 3; // Unix time (seconds since 1970-1-1 00:00 UTC)
+    AuthType auth_type = 4;
+    string username = 5;
+    string password = 6;
+    string private_key = 7;
+    string callback_address = 8; // callback address, e.g., '127.0.0.1:8086'
+    // path_blacklist: this is a blacklist for dirs/files that user specifies
+    // each path can be either a directory or a file
+    // this will override analyzer's default recommendation for exclude_paths
+    repeated string path_blacklist = 9;
+    // commit_blacklist: this is a blacklist for commits that user specifies
+    // each element is a commit's hexsha
+    repeated string commit_blacklist = 10;
+    // force re-analyze if current version project is analyzed
+    reserved 12;
+    reserved 'force';
+    // 需要ca分析的分支，例子： refs/remotes/origin/jwilson.0710.okhttp401。为空表示分析默认分支
+    // which branch/tag want to by analysis. eg: refs/remotes/origin/jwilson.0710.okhttp401.
+    // it's means to analysis default branch when default_ref is empty
+    string default_ref = 13;
+    // follow git rev-list --before=1576088612
+    int64 commit_before = 14;
+    // vdev report_id uuid
+    string report_id = 15;
+    // see merico.analysis.analysis_conf
+    string analysis_conf = 16;
+    string public_key = 17;
+    // git rev-list --before=1576088000 --after=1576077000
+    int64 commit_after = 18;
+    // git clone -b default_ref --single-branch <git_url>
+    bool single_branch = 19;
+}
+
+message SubmitRepoResponse {
+    enum ErrorMessage {
+        EMPTY = 0;
+        OBJECT_NOT_FOUND = 1;
+        VALUE_NOT_FOUND = 2;
+        VALUE_ALREADY_EXISTS = 3;
+        VALUE_OUT_OF_RANGE = 4;
+        INVALID_VALUE = 5;
+        FAILED_DEPENDENCY = 6;
+        FORBIDDEN = 7;
+        USERNAME_TAKEN = 8;
+        EMAIL_TAKEN = 9;
+    }
+    ErrorMessage error = 3;
+    string analysis_id = 4;
+    string report_id = 5;
+}
+
+message AnalysisMessage {
+    enum Readiness {
+        UNKNOWN = 0;
+        NOT_INIT = 8;
+        WAITING = 4; // wait to deal
+        AUTH_REQUIRE = 5; // need to add private key or username/password
+        NOT_REPO = 6;
+        PRE_UNDERWAY = 9;
+        PRE_READY = 10;
+        UNDERWAY = 11;
+        READY = 1;
+        FAILURE = 2;
+        PULLING = 7;
+        UNSUPPORTED = 3;
+        DUPLICATE = 20;
+    }
+    string git_url = 1;
+    string version = 2;
+    Readiness readiness = 3;
+    reserved 4;
+    reserved 'task_id';
+    string report_id = 5;
+    string analysis_id = 6;
+}
+
+// `ProgressRateMessage` is produced by analysis and put onto rabbitmq for vdev to consume
+// routing key: {routing_address}.ca.progress ,eg: 172-0-0-1-9469.ca.progress
+message ProgressRateMessage {
+    ResponseStatus status = 1;
+    string git_url = 2;
+
+    reserved 3, 4, 5;
+    reserved 'num_commits', 'current_rate', 'total_rate';
+
+    float current_percent = 6;
+    int32 estimated_total_second = 9;
+    reserved 7, 8;
+    reserved 'progress_type', 'progress_detail';
+    string analysis_id = 10;
+    string report_id = 11;
+    string submit_type = 12;
+    repeated CaTaskModel tasks = 13;
+    // CREATED, PENDING, STARTED, WAIT_TO_CONTINUE(a virtual status), SUCCESS, FAILURE
+    string analysis_status = 14;
+}
+
+message GetProjectStatusRequest {
+    string git_url = 1;
+    string version = 2;
+}
+
+message GetProjectStatusResponse {
+    ResponseStatus status = 1;
+    reserved 2;
+    reserved 'meta_dev_value';
+    map<string, float> languages = 4;
+    string version = 3;
+}
+
+message GetVersionRequest {
+}
+
+message GetVersionResponse {
+    ResponseStatus status = 1;
+    string version = 2;
+    string semver = 3;
+}
+
+message TerminateAnalysisRequest {
+    string git_url = 1;
+    string analysis_id = 2;
+    string project_id = 3;
+    string report_id = 4;
+}
+
+message TerminateAnalysisResponse {
+    repeated string analysis_ids = 1;
+    repeated string report_ids = 2;
+    ResponseStatus status = 3;
+}
+
+message LookupAnalysisRequest {
+    string analysis_id = 1;
+    string report_id = 2;
+}
+
+message LookupAnalysisResponse {
+    ResponseStatus status = 1;
+    CaAnalysisModel analysis = 2;
+}
+
+message CaAnalysisModel {
+    string id = 1;
+    string type = 2;
+    float progress = 3;
+    string status = 4;
+    string error_message = 5;
+    string traceback = 6;
+    int32 notify_result_time = 7;
+    int32 create_time = 8;
+    int32 update_time = 9;
+    string project_id = 10;
+    string report_id = 11;
+    AnalysisMessage.Readiness readiness = 12;
+    string error_type = 13;
+}
+
+message CaTaskModel {
+    int64 id = 1;
+    string analysis_id = 2;
+    string name = 3;
+    int32 seq = 4;
+    int32 analyzed_workload = 5;
+    int32 total_workload = 6;
+    string status = 7;
+    int32 tried_count = 8;
+    string worker_hostname = 9;
+    int32 heartbeat_time = 10;
+    int32 create_time = 11;
+    int32 update_time = 12;
+    int32 started_at = 13;
+    int32 completed_at = 14;
+    string celery_task_id = 15;
+}
+
+message ClearCacheRequest {
+    string git_url = 1;
+}
+
+message ClearCacheResponse {
+    enum StatusCode {
+        SUCCESS = 0;
+        SYSTEM_ERROR = 1;
+        ANALYSIS_RUNNING = 2;
+    }
+    StatusCode status = 1;
+}
+
+service CodeAnalytics {
+    // This rpc call will trigger both the pre-analysis and the formal analysis
+    rpc SubmitRepo (SubmitRepoRequest) returns (SubmitRepoResponse) {
+    }
+
+    // get ca version 获取版本号
+    rpc GetVersion (GetVersionRequest) returns (GetVersionResponse) {
+    }
+
+    // terminal ca analysis 强制结束分析
+    rpc TerminateAnalysis (TerminateAnalysisRequest) returns (TerminateAnalysisResponse) {
+    }
+
+    // This rpc call will only trigger aspect-analysis
+    rpc SubmitAspectAnalysis (SubmitRepoRequest) returns (SubmitRepoResponse) {
+    }
+
+    // This rpc call will only trigger code quality analysis
+    rpc SubmitCodeQualityAnalysis (SubmitRepoRequest) returns (SubmitRepoResponse) {
+    }
+
+    // lookup analysis by analysis_id or report_id
+    rpc LookupAnalysis (LookupAnalysisRequest) returns (LookupAnalysisResponse) {
+    }
+
+    // clear cache
+    rpc ClearCache (ClearCacheRequest) returns (ClearCacheResponse) {
+    }
+}

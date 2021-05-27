@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message AnalysisMeta {
+    string analysis_id = 1;
+    string version = 2;
+    string semver = 3;
+    string git_url = 4;
+    string analysis_type = 5;
+    repeated string path_blacklist = 6;
+    repeated string commit_blacklist = 7;
+    string default_ref = 8;
+    string default_ref_hexsha = 9;
+    bool single_branch = 10;
+    int32 commit_before = 11;
+    int32 commit_after = 12;
+    string report_id = 13;
+    string analysis_conf = 14;
+}

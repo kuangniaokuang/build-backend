@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message LineDiffEdit {
+    string file_path = 1;
+    string hexsha = 2;
+    string email = 3;
+    int32 insertions = 4;
+    int32 deletions = 5;
+    int32 dev_eq = 6;
+    float dev_rank = 7;
+    string language = 8;
+}

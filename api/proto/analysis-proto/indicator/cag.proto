@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+import "streaming.proto";
+
+message CagSnapshot {
+    message Pos {
+        int32 start_line = 1;
+        int32 end_line = 2;
+        int32 start_column = 3;
+        int32 end_column = 4;
+        int32 start_range = 5;
+        int32 end_range = 6;
+    }
+
+    string id = 1;
+    string file_path = 2;
+    string name = 3;
+    string parameters = 4;
+    string returns = 5;
+    string enc_func_name = 6;
+    Pos pos = 7;
+    string code_hash = 8;
+    string class_name = 9;
+    repeated string callees = 10;
+    int32 cyclomatic_complexity = 11;
+}
+
+message CagNode {
+    string id = 1;
+    CagSnapshot snapshot = 2;
+    string latest_hexsha = 3;
+    string earliest_hexsha = 4;
+    string frequent_hexsha = 5;
+    int32 in_degree = 6;
+    int32 out_degree = 7;
+    string email = 8;
+}
+
+message CagEdge {
+    string from_node_id = 1;
+    string to_node_id = 2;
+}
+
+message Cag {
+    int64 node_count = 1;
+    int64 edge_count = 2;
+    Streaming nodes = 4; // list of CagNode
+    Streaming edges = 5; // list of CagEdge
+}

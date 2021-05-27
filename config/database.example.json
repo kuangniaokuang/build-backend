@@ -1,0 +1,50 @@
+{
+  "development": {
+    "username": "***",
+    "host": "***",
+    "database": "***",
+    "password": "***",
+    "port": "***",
+    "dialect": "postgres"
+  },
+  "staging": {
+    "username": "***",
+    "host": "***",
+    "database": "***",
+    "password": "***",
+    "port": "***",
+    "dialect": "postgres"
+  },
+  "sandbox": {
+    "username": "***",
+    "host": "***",
+    "database": "***",
+    "password": "***",
+    "port": "***",
+    "dialect": "postgres"
+  },
+  "localhost": {
+    "username": "merico",
+    "host": "localhost",
+    "database": "cebackend",
+    "password": "merico",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "testing": {
+    "username": "***",
+    "host": "***",
+    "database": "***",
+    "password": "***",
+    "port": "***",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "***",
+    "host": "***",
+    "database": "***",
+    "password": "***",
+    "port": "***",
+    "dialect": "postgres"
+  }
+}

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+import "streaming.proto";
+
+message CodeQuality {
+    bool refreshed = 1;
+    Streaming issues = 2; // list of CodeQualityIssue
+}
+
+message CodeQualityIssue {
+    message TextRange {
+        string file_path = 1;
+        int32 start_line = 2;
+        int32 end_line = 3;
+        int32 start_column = 4;
+        int32 end_column = 5;
+        string error_msg = 6;
+    }
+    string key = 1;
+    string rule = 2;
+    string effort = 3;
+    string debt = 4;
+    string type = 5;
+    string severity = 6;
+    repeated TextRange text_ranges = 7;
+    string file_path = 8;
+    string email = 9;
+    string hexsha = 10;
+}

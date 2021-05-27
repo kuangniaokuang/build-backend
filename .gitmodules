@@ -1,0 +1,7 @@
+[submodule "common-backend"]
+	path = common-backend
+	#url = git@gitlab.com:meri.co/shared/common-backend.git
+	url = git@github.com-paulgoertzen-merico:merico-dev/common-backend.git
+[submodule "db/eeMigrations"]
+	path = db/eeMigrations
+	url = ../../ee/db.git

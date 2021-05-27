@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+import "analysis_meta.proto";
+
+message ReportOfCodeQuality {
+    // report meta and analysis parameters
+
+    AnalysisMeta meta = 1;
+
+    // TODO: add indicators
+}

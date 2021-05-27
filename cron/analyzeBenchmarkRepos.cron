@@ -1,0 +1,1 @@
+* * * * * NODE_ENV=benchmark /usr/local/bin/node /usr/src/app/scripts/benchmarkData/analyzeBenchmarkRepo.js >> /var/log/cron.log 2>&1

@@ -1,0 +1,8 @@
+node_modules
+common-backend
+commonbackend
+db/migrations
+api/copiedFromEE
+api/proto
+aws
+test

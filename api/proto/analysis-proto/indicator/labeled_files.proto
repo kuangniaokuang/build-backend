@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message UnchangedFile {
+    // which commit the file added
+    string hexsha = 1;
+    // file path
+    string file_path = 2;
+}
+
+message LabeledFiles {
+    repeated UnchangedFile unchanged_files = 1;
+}

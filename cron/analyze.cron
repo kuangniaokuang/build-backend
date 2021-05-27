@@ -1,0 +1,2 @@
+0 0 * * * /usr/local/bin/node /usr/src/app/analyzeCron.js >> /var/log/cron.log 2>&1
+

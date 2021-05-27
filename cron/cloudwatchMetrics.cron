@@ -1,0 +1,3 @@
+* * * * * /usr/local/bin/node /usr/src/app/api/util/cloudwatch/pushProductionMetrics.js >> /var/log/cron.log 2>&1
+* * * * * /usr/local/bin/node /usr/src/app/api/util/cloudwatch/pushStagingMetrics.js >> /var/log/cron.log 2>&1
+ 

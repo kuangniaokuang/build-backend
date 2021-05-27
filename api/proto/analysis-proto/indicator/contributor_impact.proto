@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message ContributorImpact {
+    string email = 1;
+    int32 func_count = 2;
+    // function id set
+    repeated string func_ids = 3;
+}

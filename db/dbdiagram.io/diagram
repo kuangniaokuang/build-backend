@@ -1,0 +1,193 @@
+Table "BadgeTypes" {
+  "id" integer [not null]
+  "code" "character varying(255)" [not null]
+  "icon" text
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+  "title" "character varying(255)"
+  "description" "character varying(255)"
+  "criteria" "character varying(255)"
+}
+
+Table "Badges" {
+  "id" integer [not null]
+  "name" "character varying(255)" [not null]
+  "type" "character varying(255)" [not null]
+  "description" "character varying(255)" [not null]
+  "rankNumerator" "character varying(255)"
+  "rankDenominator" "character varying(255)"
+  "imageUrl" "character varying(255)" [not null]
+  "user" integer [not null]
+  "project" integer
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+  "isPublic" boolean [not null, default: false]
+  "current" integer
+}
+
+Table "DeletedAccounts" {
+  "id" integer [not null]
+  "email" "character varying(255)"
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+}
+
+Table "LoginAttempts" {
+  "id" integer [not null]
+  "UserId" integer [not null]
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+}
+
+Table "PendingVerifications" {
+  "id" integer [not null]
+  "token" "character varying(255)" [not null]
+  "email" "character varying(255)" [not null]
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+}
+
+Table "Projects" {
+  "id" integer [not null]
+  "url" "character varying(255)" [not null]
+  "gitUrl" "character varying(255)" [not null]
+  "name" "character varying(255)" [not null]
+  "eeLastSyncTime" timestamp
+  "eeProjectId" uuid [not null]
+  "eeStatus" "character varying(255)"
+  "latestCommitHash" "character varying(255)"
+  "latestCommitTitle" "character varying(255)"
+  "latestCommitMessage" "character varying(255)"
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+  "isFavorite" boolean
+  "nextProcessing" timestamp
+  "priority" integer [not null, default: 0]
+  "isAnalysisPending" boolean [default: false]
+  "incomingReportId" uuid
+  "latestReportId" uuid
+}
+
+Table "SequelizeMeta" {
+  "name" "character varying(255)" [not null]
+}
+
+Table "UserEmails" {
+  "id" integer [not null]
+  "UserId" integer [not null]
+  "email" "character varying(255)" [not null]
+  "isVerified" boolean
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+}
+
+Table "UserNotifications" {
+  "id" integer [not null]
+  "user" integer [not null]
+  "message" "character varying(255)" [not null]
+  "isRead" boolean [not null, default: false]
+  "url" "character varying(255)"
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp
+}
+
+Table "UserProjects" {
+  "UserId" integer [not null]
+  "ProjectId" integer [not null]
+  "isFavorite" boolean [default: false]
+  "latestAnalysisId" "character varying(255)"
+}
+
+Table "Users" {
+  "id" integer [not null]
+  "createdAt" timestamp [not null]
+  "updatedAt" timestamp [not null]
+  "photo" "character varying(255)"
+  "displayName" "character varying(255)"
+  "githubUsername" "character varying(255)"
+  "githubApiUrl" "character varying(255)"
+  "gitlabUsername" "character varying(255)"
+  "githubAccessToken" text
+  "website" "character varying(255)"
+  "isOnboarded" boolean
+  "gitlabAccessToken" text
+  "gitlabRefreshToken" text
+  "githubRefreshToken" text
+  "primaryEmail" "character varying(255)"
+  "isPublic" boolean [not null, default: false]
+}
+
+Table "contributors" [headercolor: #f39c12] {
+  "id" integer [not null]
+  "user" integer [not null]
+  "email" "character varying(255)"
+  "remote_id" integer
+  "display_name" "character varying(255)"
+  "username" "character varying(255)"
+  "profile_url" "character varying(255)"
+  "photo_url" "character varying(255)"
+  "user_id" integer
+}
+
+Table "repository" [headercolor: #f39c12] {
+  "id" integer [not null]
+  "remote_id" integer
+  "project" integer
+}
+
+Table "pull_requests" [headercolor: #f39c12] {
+  "id" integer [not null]
+  "project" uuid [not null]
+  "remote_id" integer [not null]
+  "api_url" "character varying(255)" [not null]
+  "state" "character varying(255)" [not null]
+  "title" "character varying(255)"
+  "author" integer
+  "user" integer
+  "created_at" timestamp [not null]
+  "updated_at" timestamp [not null]
+  "closed_at" timestamp
+  "merged_at" timestamp
+  "merge_commit" "character varying(255)" [not null]
+}
+
+Table "project_commit" [headercolor: #27ae60] {
+  "id" integer [not null]
+  "author_email" integer
+}
+
+Table "contributor_emails" [headercolor: #f39c12] {
+  "id" integer [not null]
+  "contributor" integer
+  "email" varcharacter
+  
+}
+
+
+Ref: "UserEmails"."UserId" < "Users"."id"
+
+Ref: "UserProjects"."UserId" < "Users"."id"
+
+Ref: "UserProjects"."ProjectId" < "Projects"."id"
+
+Ref: "Badges"."user" < "Users"."id"
+
+Ref: "Badges"."project" < "Projects"."id"
+
+Ref: "Badges"."type" < "BadgeTypes"."id"
+
+Ref: "UserNotifications"."user" < "Users"."id"
+
+Ref: "LoginAttempts"."UserId" < "Users"."id"
+
+Ref: "repository"."project" < "Projects"."id"
+
+Ref: "pull_requests"."project" < "repository"."remote_id"
+
+Ref: "contributors"."user" < "Users"."id"
+
+Ref: "pull_requests"."author" < "contributors"."remote_id"
+
+Ref: "contributor_emails"."contributor" < "contributors"."remote_id"
+
+Ref: "project_commit"."author_email" < "contributor_emails"."email"

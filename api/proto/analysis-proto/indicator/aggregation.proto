@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+// TODO: Deprecated, for forward compatibility
+message Aggregation {
+    message ByCommitFile {
+        string hexsha = 1;
+        string file_path = 2;
+        int32 dev_eq = 3;
+        float dev_rank = 4;
+    }
+    message ByCommit {
+        string hexsha = 1;
+        int32 dev_eq = 2;
+        float dev_rank = 3;
+    }
+    message ByContributorFile {
+        string email = 1;
+        string file_path = 2;
+        int32 dev_eq = 3;
+        float dev_rank = 4;
+    }
+    message ByFile {
+        string file_path = 1;
+        int32 dev_eq = 2;
+        float dev_rank = 3;
+    }
+    message ByContributor {
+        string email = 1;
+        int32 dev_eq = 2;
+        float dev_rank = 3;
+    }
+    // <COMMIT_FILE_EQUIVALENT> and <COMMIT_FILE_VALUE>
+    repeated ByCommitFile by_commit_files = 1;
+    // <COMMIT_EQUIVALENT> and <COMMIT_VALUE>
+    repeated ByCommit by_commits = 2;
+    // <DEVELOPER_FILE_EQUIVALENT> and <DEVELOPER_FILE_VALUE>
+    repeated ByContributorFile by_contributor_files = 3;
+    // <COMMIT_VALUE>
+    repeated ByFile by_files = 4;
+    // <FILE_EQUIVALENT>
+    repeated ByContributor by_contributors = 5;
+}
+

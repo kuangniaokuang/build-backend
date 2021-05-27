@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+import "analysis_meta.proto";
+import "streaming.proto";
+import "labeled_commits.proto";
+import "labeled_files.proto";
+import "commit_metrics.proto";
+import "ccg.proto";
+import "cag.proto";
+import "contributor_impact.proto";
+import "package_dependency.proto";
+import "topic_modeling.proto";
+import "ignored_record.proto";
+import "doc_coverage.proto";
+import "dryness.proto";
+import "static_test_coverage.proto";
+import "code_quality.proto";
+import "tech_tag.proto";
+import "aggregation.proto";
+import "contributor_bomb_sweep.proto";
+import "test_of_time.proto";
+
+message ReportOfAll {
+    int32 proto_version = 1;
+    // report meta and analysis parameters
+    AnalysisMeta meta = 2;
+    // the fields that this report carried
+    repeated string fields = 3;
+
+    // --------------------------------------------------------------
+
+    // indicators
+
+    // language
+    // <ALL_LINGUIST>
+    map<string, float> linguist_langs = 11;
+    // <SUPPORTED_LANGUAGES>
+    repeated string tree_diff_langs = 12;
+    repeated string line_diff_langs = 13;
+
+    // commit
+    Streaming commits = 14;
+    repeated string mapped_emails = 15; // The most complete emails, also contain the emails in .mailmap file
+    // <PROJECT_COMPLEXITY> and <PROJECT_CYCLOMATIC_COMPLEXITY> and <PROJECT_CYCLOMATIC_COMPLEXITY_FUNCTION_COUNT>
+    repeated CommitMetrics commit_metrics = 16;
+    // <TYPED_COMMITS>
+    LabeledCommits labeled_commits = 17;
+    // <FEATURED_FILES>
+    LabeledFiles labeled_files = 18;
+
+    // <IGNORED_RECORDS>
+    repeated IgnoredRecord ignored_records = 19;
+
+    // ccg
+    // <PROJECT_CALL_GRAPH>
+    // <language, Ccg>
+    map<string, Ccg> ccgs = 20;
+    // line diff fragments
+    Streaming line_diff_edits = 21;
+
+    // <TOTAL_DEV_EQUIVALENT>
+    int64 total_dev_eq = 22;
+    // <LANGUAGE_PERCENTAGES>
+    map<string, float> dev_eq_langs = 23;
+
+    // doc coverage
+    // <DOC_COVERAGE> and <DOC_COVERAGE_FUNCS>
+    DocCoverage doc_coverage = 24;
+
+    // dryness
+    // <DRYNESS> and <DRYNESS_FUNCS>
+    Dryness dryness = 25;
+
+    // static test coverage
+    // <STATIC_TEST_COVERAGE> and <STATIC_TEST_COVERAGE_FUNCS>
+    StaticTestCoverage static_test_coverage = 26;
+
+    // code quality
+    CodeQuality code_quality = 27;
+
+    // custom code quality
+    CodeQuality custom_code_quality = 28;
+
+    // contributor impact function
+    // <DEVELOPER_IMPACT_FUNCS>
+    repeated ContributorImpact contributor_impact = 29;
+
+    // tech tag
+    // <TECH_TAG>
+    TechTag tech_tag = 30;
+
+    // topic modeling
+    // <FILE_TOPIC_DISTRIBUTION> and <FILE_DEVELOPER_CONTRIBUTION> and <MANPOWER_ALLOCATION>
+    TopicModeling topic_modeling = 31;
+
+    // modularity
+    // <MODULARITY>
+    float modularity = 32;
+
+    // robustness
+    // <ROBUSTNESS>
+    float robustness = 33;
+
+    // velocity
+    // <VELOCITY>
+    float velocity = 34;
+
+    // git tags
+    // <RELEASE_TAGS>
+    repeated string vcs_tags = 35;
+
+    // repo dependencies
+    // <DEPENDENCIES>
+    repeated PackageDependency package_dependencies = 36;
+
+    // aggregation
+    // TODO: Deprecated, for forward compatibility
+    Aggregation aggregation = 37;
+
+    // cag
+    // <CALL_ASPECT_GRAPH>
+    // <language, Cag>
+    map<string, Cag> cags = 38;
+
+    // contributor bomb sweep
+    // <DEVELOPER_BOMB_SWEEP>
+    repeated ContributorBombSweep contributor_bomb_sweep = 39;
+
+    // test of time functions
+    // <TEST_OF_TIME_FUNCTIONS>
+    repeated TestOfTimeFunction test_of_time_functions = 40;

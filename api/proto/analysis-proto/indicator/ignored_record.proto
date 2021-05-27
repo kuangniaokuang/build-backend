@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message IgnoredRecord {
+    string file_path = 1;
+    string hexsha = 2;
+    string reason = 3;
+}

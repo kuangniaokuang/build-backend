@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message StaticTestCoverage {
+    message StaticTestCoverageFunc {
+        string func_id = 1;
+        string email = 2;
+        string latest_hexsha = 3;
+    }
+    // score range: [0, 1]
+    float score = 1;
+    repeated StaticTestCoverageFunc covered_funcs = 2;
+    repeated StaticTestCoverageFunc uncovered_funcs = 3;
+}
+

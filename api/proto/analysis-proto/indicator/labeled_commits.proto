@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message CherryPick {
+    // the original commit hexsha
+    string original = 1;
+    // the cherry-pick commits hexsha
+    repeated string replicas = 2;
+}
+
+message LabeledCommits {
+    // commit haxsha list whose insertions is greater than a threshold
+    repeated string large_insertions = 1;
+    // commit haxsha list whose deletions is greater than a threshold
+    repeated string large_deletions = 2;
+    // commit haxsha list whose message matches '^[^\w]*revert'
+    repeated string revert = 3;
+    // cherry pick groups
+    repeated CherryPick cherry_picks = 4;
+}

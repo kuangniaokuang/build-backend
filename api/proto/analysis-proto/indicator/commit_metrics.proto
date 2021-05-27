@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message CommitMetrics {
+    // commit hexsha
+    string hexsha = 1;
+    // -> PROJECT_COMPLEXITY
+    int32 complexity = 2;
+    // -> PROJECT_CYCLOMATIC_COMPLEXITY
+    int32 cyclomatic_complexity = 3;
+    // -> PROJECT_CYCLOMATIC_COMPLEXITY_FUNCTION_COUNT
+    int32 big_cc_func_count = 4;
+}

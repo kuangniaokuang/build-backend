@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package merico.proto.analysis.indicator;
+
+message DocCoverage {
+    message DocCoverageFunc {
+        string func_id = 1;
+        string email = 2;
+        int32 comment_count = 3;
+    }
+
+    // score range: [0, 1]
+    float score = 1;
+    repeated DocCoverageFunc doc_coverage_funcs = 2; // list of DocCoverageFunc
+}

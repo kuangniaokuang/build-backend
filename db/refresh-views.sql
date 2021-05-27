@@ -1,0 +1,1 @@
+REFRESH MATERIALIZED VIEW email_to_primary_email_booster;
